@@ -4,9 +4,32 @@
 
 `npm install --save express-graphql graphql`
 
-## Criando um modelo no banco
-`npm install --save lowdb`
+## Criando o type Contact
 
-## Criando um mutation
+```
+const schema = buildSchema(`
+  type Contact {
+    id: ID!,
+    name: String,
+    phone: String
+  }
 
-## Criando mais de um type
+  type Query {
+    getContact(id: ID!): Contact
+  }
+
+  type Mutation {
+    createContact(name: String, phone: String): Contact
+  }
+`);
+```
+
+```
+mutation {
+  createContact(name: "Fernando", phone: "44 9987894544") {
+    id,
+    name,
+    phone
+  }
+}
+```
