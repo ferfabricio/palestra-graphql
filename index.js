@@ -5,6 +5,11 @@ const { buildSchema, GraphQLList } = require('graphql');
 const contacts = {};
 
 const schema = buildSchema(`
+  input ContactInput {
+    name: String
+    phone: String
+  }
+
   type Contact {
     id: ID!,
     name: String,
@@ -17,23 +22,37 @@ const schema = buildSchema(`
   }
 
   type Mutation {
-    createContact(name: String, phone: String): Contact
+    createContact(input: ContactInput): Contact,
+    updateContact(id: ID!, input: ContactInput) : Contact
   }
 `);
 
 const root = {
-  createContact: ({name, phone}) => {
+  createContact: ({input}) => {
     return new Promise((resolve, reject) => {
       let id = require('crypto').randomBytes(10).toString('hex');
 
       contacts[id] = {
         id,
-        name,
-        phone
+        ...input
       };
 
       resolve(contacts[id]);
     });
+  },
+  updateContact: ({id, input}) => {
+    return new Promise((resolve, reject) => {
+      if (!contacts.hasOwnProperty(id)) {
+        reject('contact not found, id: ' + id);
+      }
+
+      contacts[id] = {
+        ...contacts[id],
+        ...input
+      };
+
+      resolve(contacts[id]);
+    })
   },
   contact: ({ id }) => {
     return new Promise((resolve, reject) => {

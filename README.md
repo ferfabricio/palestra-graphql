@@ -33,3 +33,34 @@ mutation {
   }
 }
 ```
+
+## Interface
+```
+  input ContactInput {
+    name: String
+    phone: String
+  }
+```
+
+```
+mutation {
+  createContact(input: {
+    name: "Teste",
+    phone: "123456"
+  }) {
+    id, name, phone
+  }
+}
+```
+
+```
+mutation {
+  updateContact(id: "fc949af8620b0e41fa53", input:{
+    name: "Fernando Fabricio dos Santos"
+  }) {
+    id,
+    name,
+    phone
+  }
+}
+```
